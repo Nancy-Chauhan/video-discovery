@@ -16,7 +16,7 @@ def parse_video(item):
 
 
 def search(after=None):
-    params = {'type': 'video', 'part': 'id,snippet', 'order': 'date', 'maxResults': 1000,
+    params = {'type': 'video', 'part': 'id,snippet', 'order': 'date',
               'q': settings.youtube_search_query(), 'key': settings.youtube_api_key()}
     if after:
         params['publishedAfter'] = after.isoformat()
