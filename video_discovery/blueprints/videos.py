@@ -28,13 +28,17 @@ def list_all_videos():
     except ValueError:
         return validation_error('"limit" is not a valid integer')
 
+    search = request.args.get("q")
+
     query = Video.query
 
+    if search:
+        query = query.filter(Video.__ts_vector__.match(search))
+
     if offset:
-        query.filter(Video.published_at <= offset)
+        query = query.filter(Video.published_at <= offset)
 
     data = query.order_by(desc(Video.published_at)).limit(limit).all()
-
     return jsonify(serialize_many(data))
 
 

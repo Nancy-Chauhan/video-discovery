@@ -1,0 +1,42 @@
+version: '3'
+services:
+  db:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=video-discovery
+  rabbitmq:
+    ports:
+      - 5672:5672
+    image: rabbitmq:3
+  app:
+    depends_on:
+      - rabbitmq
+    build: .
+    image: video_discovery
+    environment:
+      - DATABASE_URI=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/video-discovery
+    ports:
+      - 5000:5000
+  beat:
+    depends_on:
+      - rabbitmq
+    build: .
+    image: video_discovery
+    environment:
+      - DATABASE_URI=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/video-discovery
+      - VIDEO_UPDATE_INTERVAL_SECONDS=${VIDEO_UPDATE_INTERVAL_SECONDS}
+      - CELERY_BROKER_URI=amqp://rabbitmq:5672/
+    command: celery -A video_discovery.tasks beat -s /tmp/celerybeat-schedule.db
+  worker:
+    depends_on:
+      - rabbitmq
+    build: .
+    image: video_discovery
+    environment:
+      - DATABASE_URI=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/video-discovery
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+      - CELERY_BROKER_URI=amqp://rabbitmq:5672/
+    command: celery -A video_discovery.tasks worker
