@@ -10,6 +10,9 @@ flask-sqlalchemy = "*"
 sqlalchemy = "*"
 flask-migrate = "*"
 psycopg2-binary = "*"
+celery = "*"
+requests = "*"
+python-dateutil = "*"
 
 [dev-packages]
 pytest = "*"

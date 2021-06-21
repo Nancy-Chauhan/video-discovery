@@ -15,3 +15,19 @@ def init_app(app: Flask):
         SQLALCHEMY_DATABASE_URI=database_uri(),
         BASE_URL=os.getenv('BASE_URL', 'http://127.0.0.1:5000'),
     )
+
+
+def celery_broker_uri():
+    return os.getenv('CELERY_BROKER_URI')
+
+
+def video_crawl_interval_seconds():
+    return int(os.getenv('VIDEO_UPDATE_INTERVAL_SECONDS', '60'))
+
+
+def youtube_search_query():
+    return os.getenv('YOUTUBE_SEARCH_QUERY', 'coffee')
+
+
+def youtube_api_key():
+    return os.getenv('YOUTUBE_API_KEY', '')
