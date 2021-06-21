@@ -1,0 +1,14 @@
+version: '3'
+services:
+  db:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=video-discovery
+  rabbitmq:
+    ports:
+      - 5672:5672
+    image: rabbitmq:3
+
